@@ -1,0 +1,2 @@
+Passenger Number,Passenger Name,Flight Number,Departure Time,Arrival Time,Origin,Destination,Flight Type,Total Cost,VAT,Grand Total
+1,Eunice,AB123,2024-06-01 10:00,2024-06-01 14:00,UK,Canada,business: 50.0; First Class: 60.0,110.0,16.5,126.5
