@@ -1,0 +1,34 @@
+{
+    "menu": [
+        {
+            "name": "Pizza",
+            "price": 10.99,
+            "ingredients": [
+                "dough",
+                "tomato sauce",
+                "cheese"
+            ]
+        },
+        {
+            "name": "Burger",
+            "price": 8.99,
+            "ingredients": [
+                "bun",
+                "beef patty",
+                "lettuce",
+                "tomato",
+                "cheese"
+            ]
+        },
+        {
+            "name": "Salad",
+            "price": 6.99,
+            "ingredients": [
+                "lettuce",
+                "tomato",
+                "cucumber",
+                "carrot"
+            ]
+        }
+    ]
+}
