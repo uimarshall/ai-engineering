@@ -4,6 +4,8 @@ Real-world use cases for analysing e-commerce data using SQL SELECT statements.
 
 ---
 
+Select statement is used to retrieve data from a database.
+
 ## Schema Reference (assumed tables)
 
 ```
