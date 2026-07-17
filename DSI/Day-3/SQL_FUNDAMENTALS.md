@@ -1,11 +1,3 @@
-Updated todo list
-
-Read [](file:///c%3A/Users/uimar/code/Githubfiles/ai-engineering/DSI/Day-3/QUERY.md#1-1), lines 1 to 200
-
-Read [](file:///c%3A/Users/uimar/code/Githubfiles/ai-engineering/DSI/Day-3/QUERY.md#201-201), lines 201 to 260
-
-Read [](file:///c%3A/Users/uimar/code/Githubfiles/ai-engineering/DSI/Day-3/QUERY.md#261-261), lines 261 to 315
-
 Here is a comprehensive, beginner-friendly breakdown of every SQL keyword, clause, function, and concept used in this file — with sample tables throughout.
 
 ---
