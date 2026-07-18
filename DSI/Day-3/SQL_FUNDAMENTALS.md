@@ -125,6 +125,69 @@ JOIN orders o      -- 'o' is the alias for orders
   ON c.customer_id = o.customer_id;
 ```
 
+Updated todo list
+
+## SQL Statement Breakdown
+
+```sql
+SELECT c.name, o.total_amount
+FROM customers c
+JOIN orders o
+  ON c.customer_id = o.customer_id;
+```
+
+---
+
+### What each part does:
+
+**`FROM customers c`**
+
+- Start with the `customers` table. The `c` is just a shorthand alias so you don't have to type `customers` every time.
+
+**`JOIN orders o`**
+
+- Also bring in the `orders` table (aliased as `o`). A `JOIN` (also called `INNER JOIN`) combines rows from both tables.
+
+**`ON c.customer_id = o.customer_id`**
+
+- This is the **matching condition** — only combine rows where the customer ID in both tables is the **same**. This links a customer to their orders.
+
+**`SELECT c.name, o.total_amount`**
+
+- From the combined result, only return two columns:
+  - `name` from the `customers` table
+  - `total_amount` from the `orders` table
+
+---
+
+### Visual example of what's happening:
+
+**customers table:**
+
+| customer_id | name    |
+| ----------- | ------- |
+| 1           | Alice   |
+| 2           | Bob     |
+| 3           | Charlie |
+
+**orders table:**
+
+| order_id | customer_id | total_amount |
+| -------- | ----------- | ------------ |
+| 101      | 1           | 50.00        |
+| 102      | 2           | 120.00       |
+| 103      | 1           | 30.00        |
+
+**Result after the JOIN:**
+
+| name  | total_amount |
+| ----- | ------------ |
+| Alice | 50.00        |
+| Bob   | 120.00       |
+| Alice | 30.00        |
+
+> Note: Charlie is **not** in the result because he has no matching row in the `orders` table — that's what `INNER JOIN` does, it only returns rows where a match exists in **both** tables.
+
 ---
 
 ## 4. `WHERE`
@@ -153,17 +216,18 @@ WHERE status = 'completed';
 Think of `WHERE` as a gate: _"Only let through rows that pass this test."_
 
 Common `WHERE` operators:
-| Operator | Meaning |
-|----------|---------|
-| `=` | Equal to |
-| `<>` or `!=` | Not equal |
-| `>`, `<`, `>=`, `<=` | Comparisons |
-| `AND` | Both conditions must be true |
-| `OR` | Either condition must be true |
-| `IS NULL` | Value is missing/empty |
-| `BETWEEN a AND b` | Value is in a range |
-| `IN (a, b, c)` | Value matches one of a list |
-| `LIKE '%text%'` | Pattern matching |
+
+| Operator             | Meaning                       |
+| -------------------- | ----------------------------- |
+| `=`                  | Equal to                      |
+| `<>` or `!=`         | Not equal                     |
+| `>`, `<`, `>=`, `<=` | Comparisons                   |
+| `AND`                | Both conditions must be true  |
+| `OR`                 | Either condition must be true |
+| `IS NULL`            | Value is missing/empty        |
+| `BETWEEN a AND b`    | Value is in a range           |
+| `IN (a, b, c)`       | Value matches one of a list   |
+| `LIKE '%text%'`      | Pattern matching              |
 
 ---
 
@@ -568,12 +632,13 @@ Kitchen:      50/1000 * 100 =  5.00%
 ```
 
 Other common window functions (good to know):
-| Function | What it does |
-|----------|-------------|
+
+| Function                          | What it does                   |
+| --------------------------------- | ------------------------------ |
 | `ROW_NUMBER() OVER(ORDER BY ...)` | Assign a row number 1, 2, 3... |
-| `RANK() OVER(ORDER BY ...)` | Rank with gaps on ties |
-| `SUM(col) OVER(ORDER BY ...)` | Running total |
-| `LAG(col) OVER(ORDER BY ...)` | Get the previous row's value |
+| `RANK() OVER(ORDER BY ...)`       | Rank with gaps on ties         |
+| `SUM(col) OVER(ORDER BY ...)`     | Running total                  |
+| `LAG(col) OVER(ORDER BY ...)`     | Get the previous row's value   |
 
 ---
 

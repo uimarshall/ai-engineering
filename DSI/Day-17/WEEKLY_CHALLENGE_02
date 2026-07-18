@@ -1,0 +1,178 @@
+/*
+=============================================================================
+  Weekly SQL Challenge 02
+=============================================================================
+  Database : grocery_db schema
+  Tables   : transactions, product_areas
+
+  TASK
+  ----
+  Identify the top 3 product areas based on the highest total items sold.
+
+  EXPECTED OUTPUT
+  ---------------
+  Three rows with columns:
+    - product_area_name  : the name of the product area (e.g. Dairy, Bakery)
+    - total_items        : total number of items sold in that area
+  Rows must be ordered by total_items in DESCENDING order (highest first).
+
+=============================================================================
+  BUSINESS CONTEXT
+=============================================================================
+  Imagine you are a data analyst at a mid-size grocery chain competing
+  against large retailers like Walmart and Costco.  Leadership wants to
+  make data-driven decisions to:
+
+    • Allocate shelf space more profitably — put the most-sold categories
+      front-and-centre to maximise basket size.
+    • Plan promotions strategically — knowing the top 3 product areas lets
+      the marketing team focus discount campaigns where customer demand is
+      already high, increasing basket conversion rates.
+    • Manage inventory and supply chains — high-volume areas need tighter
+      stock control to avoid costly out-of-stock events.
+    • Benchmark against competitors — if "Beverages" is your #1 area but a
+      rival is out-performing you on "Snacks", that gap signals an
+      opportunity or a threat to profitability.
+
+  This single query answers: "Where are customers spending the most?"
+  That insight directly informs purchasing budgets, staffing levels in
+  those aisles, and which suppliers to negotiate better pricing with.
+=============================================================================
+*/
+
+-- ---------------------------------------------------------------------
+-- SELECT clause
+-- What it does: specifies the exact columns we want returned.
+-- ---------------------------------------------------------------------
+select
+
+  -- b.product_area_name
+  --   'b' is the alias we gave the product_areas table (see FROM below).
+  --   product_area_name holds a human-readable label such as "Dairy" or
+  --   "Bakery".  We retrieve it here so the final result is meaningful
+  --   rather than just showing a numeric ID.
+  b.product_area_name,
+
+  -- sum(a.num_items) as total_items
+  --   'a' is the alias for the transactions table.
+  --   num_items stores how many items were bought in each transaction row.
+  --   SUM() is an aggregate function — it adds up all num_items values
+  --   that belong to the same product area after the GROUP BY is applied.
+  --   'as total_items' renames the calculated column to a clear label in
+  --   the output — a best practice so downstream users know what the
+  --   number represents.
+  --
+  --   BUSINESS VALUE: This number tells us the raw volume moved per
+  --   product area, which is a leading indicator of revenue and footfall.
+  sum(a.num_items) as total_items
+
+-- ---------------------------------------------------------------------
+-- FROM clause + alias
+-- What it does: declares the primary (driving) table for the query.
+-- ---------------------------------------------------------------------
+from
+
+  -- grocery_db.transactions a
+  --   grocery_db  : the database (schema) name — keeps queries portable
+  --                 across environments (dev, staging, prod).
+  --   transactions: the table that records every purchase event.
+  --                 Each row typically represents one product line within
+  --                 a customer's basket.
+  --   a           : a short alias so we don't have to type the full table
+  --                 name every time we reference its columns.
+  grocery_db.transactions a
+
+  -- INNER JOIN grocery_db.product_areas b
+  --   Combines the transactions table with the product_areas lookup table.
+  --   INNER JOIN returns only rows where a matching record exists in BOTH
+  --   tables — any transaction with an unrecognised product_area_id would
+  --   be silently excluded, keeping results clean.
+  --
+  --   'b' is the alias for product_areas.
+  --
+  -- ON a.product_area_id = b.product_area_id
+  --   This is the JOIN condition — the "bridge" between the two tables.
+  --   a.product_area_id  : numeric foreign key stored on each transaction.
+  --   b.product_area_id  : numeric primary key in the product_areas table.
+  --   Matching these two columns links every transaction to its
+  --   human-readable category name.
+  --
+  --   WHY THIS MATTERS: Without the join, we would only have numeric IDs
+  --   in the output.  Business users need "Bakery" not "3".
+  inner join grocery_db.product_areas b on a.product_area_id = b.product_area_id
+
+-- ---------------------------------------------------------------------
+-- GROUP BY clause
+-- What it does: collapses all transaction rows into one summary row
+--               per unique product_area_name.
+-- ---------------------------------------------------------------------
+group by
+
+  -- b.product_area_name
+  --   Before GROUP BY, the result set has one row per transaction
+  --   (potentially millions of rows).  GROUP BY merges all rows that share
+  --   the same product_area_name into a single row, which is what allows
+  --   SUM() to total up the items across all transactions in that area.
+  --
+  --   ANALOGY: Think of sorting receipts into labelled folders (one folder
+  --   per product area) and then counting everything inside each folder.
+  b.product_area_name
+
+-- ---------------------------------------------------------------------
+-- ORDER BY clause
+-- What it does: sorts the grouped results before they are returned.
+-- ---------------------------------------------------------------------
+order by
+
+  -- total_items desc
+  --   Sorts by the alias we defined in the SELECT clause.
+  --   DESC = descending, so the product area with the MOST items sold
+  --   appears first (rank #1 at the top).
+  --
+  --   BUSINESS VALUE: Decision-makers expect a ranked list — "show me
+  --   the best performers first."  Descending order makes the top
+  --   opportunities immediately visible without manual scanning.
+  total_items desc
+
+-- ---------------------------------------------------------------------
+-- LIMIT clause
+-- What it does: caps the number of rows returned by the query.
+-- ---------------------------------------------------------------------
+
+-- limit 3
+--   Returns only the first 3 rows after sorting — i.e. the TOP 3
+--   product areas by items sold.
+--
+--   WHY 3?  The business question is specifically about the top 3 so
+--   leadership can focus resources on a manageable shortlist.  In a
+--   real scenario this number might be a dashboard parameter that
+--   users can change (e.g. top 5 or top 10).
+--
+--   NOTE: LIMIT is applied AFTER ORDER BY, so the 3 rows we keep are
+--   guaranteed to be the highest-ranked ones.
+limit 3;
+
+/*
+=============================================================================
+  HOW TO READ THE OUTPUT  (Example)
+=============================================================================
+
+  | product_area_name | total_items |
+  |-------------------|-------------|
+  | Dairy             |      84,320 |
+  | Bakery            |      71,905 |
+  | Beverages         |      68,412 |
+
+  Reading this result a grocery chain executive might conclude:
+    1. Dairy is our highest-volume category — ensure premium shelf
+       placement and negotiate volume discounts with dairy suppliers.
+    2. Bakery is strong — consider in-store bakery expansion or
+       cross-promotion with Dairy (cheese + bread bundles).
+    3. Beverages sits 3rd — if a competitor dominates Beverages locally,
+       a targeted promotion could win market share and boost overall spend.
+
+  Each additional item sold per basket directly improves gross margin
+  and reduces the per-customer cost of acquisition — both critical KPIs
+  for sustainable profitability in the grocery sector.
+=============================================================================
+*/
