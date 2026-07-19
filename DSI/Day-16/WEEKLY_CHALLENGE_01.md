@@ -1,5 +1,15 @@
 # Weekly SQL Challenge 01
 
+## Data: grocery_db schema data tables
+
+Task: Identify customers who have a credit score over 0.5 and who spent more than $100 in September 2020.
+
+Expected Output: Return data with 3 columns:
+
+customer_id
+credit_score
+total_sales (the customer's spend in September 2020)
+
 **Database:** `grocery_db` schema
 
 ---
@@ -22,9 +32,9 @@ Identify customers who have a **credit score above 0.5** AND who **spent more th
 
 Combining credit score with actual spend behaviour gives the business a two-dimensional view of a customer:
 
-| Dimension | What it tells us |
-|---|---|
-| Credit score | Financial reliability and risk profile |
+| Dimension     | What it tells us                       |
+| ------------- | -------------------------------------- |
+| Credit score  | Financial reliability and risk profile |
 | Monthly spend | Actual value to the business right now |
 
 Customers who score well on **both** dimensions are prime candidates for premium loyalty tiers, personalised offers, and higher credit limits — all of which drive repeat business and increase **customer lifetime value (CLV)**.
@@ -33,11 +43,11 @@ Customers who score well on **both** dimensions are prime candidates for premium
 
 ## Expected Output
 
-| Column | Description |
-|---|---|
-| `customer_id` | Unique identifier for the customer |
+| Column         | Description                                           |
+| -------------- | ----------------------------------------------------- |
+| `customer_id`  | Unique identifier for the customer                    |
 | `credit_score` | Credit reliability score (0–1 scale, higher = better) |
-| `total_sales` | Total amount the customer spent in September 2020 |
+| `total_sales`  | Total amount the customer spent in September 2020     |
 
 ---
 
@@ -91,10 +101,10 @@ SELECT
     SUM(b.sales_cost) AS total_spend
 ```
 
-| Line | What it does |
-|---|---|
-| `a.customer_id` | Pulls the unique customer ID from the `customer_details` table. The `a.` prefix tells SQL which table to read from (using the alias defined in `FROM`). |
-| `a.credit_score` | Returns the customer's credit score. Including it in `SELECT` lets analysts rank or segment the results without needing a second query. |
+| Line                               | What it does                                                                                                                                                                                      |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `a.customer_id`                    | Pulls the unique customer ID from the `customer_details` table. The `a.` prefix tells SQL which table to read from (using the alias defined in `FROM`).                                           |
+| `a.credit_score`                   | Returns the customer's credit score. Including it in `SELECT` lets analysts rank or segment the results without needing a second query.                                                           |
 | `SUM(b.sales_cost) AS total_spend` | `SUM()` is an **aggregate function** — it adds up every `sales_cost` value for each customer group. `AS total_spend` gives the result a readable column name instead of showing the raw function. |
 
 ---
@@ -107,10 +117,10 @@ FROM
     INNER JOIN grocery_db.transactions b ON a.customer_id = b.customer_id
 ```
 
-| Concept | Explanation |
-|---|---|
-| `grocery_db.customer_details a` | The primary table. `a` is a **table alias** — a short nickname so you do not repeat the full table name on every column reference. |
-| `INNER JOIN` | Returns only rows that have a matching record in **both** tables (like the overlap of a Venn diagram). Customers with no transactions and orphaned transaction records are both excluded. |
+| Concept                            | Explanation                                                                                                                                                                                           |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `grocery_db.customer_details a`    | The primary table. `a` is a **table alias** — a short nickname so you do not repeat the full table name on every column reference.                                                                    |
+| `INNER JOIN`                       | Returns only rows that have a matching record in **both** tables (like the overlap of a Venn diagram). Customers with no transactions and orphaned transaction records are both excluded.             |
 | `ON a.customer_id = b.customer_id` | The **join condition** — the rule that links the two tables. Without it, the database would pair every customer with every transaction, producing millions of meaningless rows (a cartesian product). |
 
 ---
@@ -125,10 +135,10 @@ WHERE
 
 > `WHERE` runs **before** any grouping or aggregation. Both conditions must be `TRUE` for a row to pass through (`AND` logic).
 
-| Filter | What it removes | Business rationale |
-|---|---|---|
-| `a.credit_score > 0.5` | Customers at 0.5 or below | Extending premium offers to financially unreliable customers increases bad debt risk. Removing them early also makes the query faster. Use `>=` if you want to include the boundary value. |
-| `BETWEEN '2020-09-01' AND '2020-09-30'` | Transactions outside September 2020 | Restricting to one month enables like-for-like performance comparison, isolates the September promotion's impact, and pinpoints which high-credit customers responded to it. |
+| Filter                                  | What it removes                     | Business rationale                                                                                                                                                                         |
+| --------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `a.credit_score > 0.5`                  | Customers at 0.5 or below           | Extending premium offers to financially unreliable customers increases bad debt risk. Removing them early also makes the query faster. Use `>=` if you want to include the boundary value. |
+| `BETWEEN '2020-09-01' AND '2020-09-30'` | Transactions outside September 2020 | Restricting to one month enables like-for-like performance comparison, isolates the September promotion's impact, and pinpoints which high-credit customers responded to it.               |
 
 ---
 
@@ -153,10 +163,10 @@ HAVING
     SUM(b.sales_cost) > 100
 ```
 
-| Keyword | Runs | Filters |
-|---|---|---|
-| `WHERE` | Before `GROUP BY` | Individual rows |
-| `HAVING` | After `GROUP BY` | Grouped / aggregated results |
+| Keyword  | Runs              | Filters                      |
+| -------- | ----------------- | ---------------------------- |
+| `WHERE`  | Before `GROUP BY` | Individual rows              |
+| `HAVING` | After `GROUP BY`  | Grouped / aggregated results |
 
 You **cannot** use `WHERE` to filter on `SUM()` because `SUM()` does not exist at the `WHERE` stage — that is exactly why `HAVING` exists.
 
@@ -168,15 +178,15 @@ You **cannot** use `WHERE` to filter on `SUM()` because `SUM()` does not exist a
 
 Understanding the order in which the database processes each clause helps you write correct filters and debug unexpected results.
 
-| Step | Clause | What happens |
-|---|---|---|
-| 1 | `FROM` | Load the `customer_details` table |
-| 2 | `JOIN` | Combine with `transactions` on matching `customer_id` |
-| 3 | `WHERE` | Discard rows where `credit_score <= 0.5` or date is outside Sep 2020 |
-| 4 | `GROUP BY` | Collapse remaining rows into one row per customer |
-| 5 | `HAVING` | Discard customer groups where total spend `<= $100` |
-| 6 | `SELECT` | Pick the three output columns and calculate the `SUM` alias |
-| 7 | `ORDER BY` | *(not used here, but would run last if included)* |
+| Step | Clause     | What happens                                                         |
+| ---- | ---------- | -------------------------------------------------------------------- |
+| 1    | `FROM`     | Load the `customer_details` table                                    |
+| 2    | `JOIN`     | Combine with `transactions` on matching `customer_id`                |
+| 3    | `WHERE`    | Discard rows where `credit_score <= 0.5` or date is outside Sep 2020 |
+| 4    | `GROUP BY` | Collapse remaining rows into one row per customer                    |
+| 5    | `HAVING`   | Discard customer groups where total spend `<= $100`                  |
+| 6    | `SELECT`   | Pick the three output columns and calculate the `SUM` alias          |
+| 7    | `ORDER BY` | _(not used here, but would run last if included)_                    |
 
 > **Common beginner mistake:** filtering on `total_spend` inside `WHERE`. This fails because `WHERE` runs at step 3 — before `SUM()` is calculated at step 6. Always use `HAVING` to filter on aggregated values.
 
