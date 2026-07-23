@@ -1,9 +1,9 @@
-A beginner-friendly explanation of Tableau Measures, Dimensions, and Marks with practical use cases.
+## A beginner-friendly explanation of Tableau Measures, Dimensions, and Marks with practical use cases
 
 Think of Tableau like this:
 
-- Dimensions = “labels/categories” (what something is)
-- Measures = “numbers you calculate” (how much/how many)
+- Dimensions = “labels/categories” (what something is) - such as labelling a graph to show what is being measured.
+- Measures = “numbers you calculate” (how much/how many) - The values you use in plotting the graph.
 - Marks = “how data is drawn” (bars, dots, lines, colors, size, text)
 
 ## 1. Dimensions (the “group by” fields)
@@ -165,30 +165,30 @@ Build: Total Sales by Category (bar chart), then color bars by Profit.
 - Dimensions: Category, Region, Order Date
 - Measures: Sales, Profit, Quantity
 
-3. Create your first view  
+1. Create your first view  
    Drag Category to Columns.  
    Drag Sales to Rows.  
    You now have Dimension + Measure.
 
-4. Understand what happened
+2. Understand what happened
 
 - Category split the data into groups (Furniture, Office Supplies, Technology)
 - Sales got aggregated (usually SUM)
 - Tableau created bars automatically (Marks type = Bar)
 
-5. Work with Marks  
+1. Work with Marks  
    On the Marks card, drag Profit to Color.  
    Now each bar has color based on profit values.
 
-6. Add labels for readability  
+2. Add labels for readability  
    Drag Sales to Label on the Marks card.  
    You can now see values on each bar.
 
-7. Add one simple filter (optional but useful)  
+3. Add one simple filter (optional but useful)  
    Drag Region to Filters and select one region (for example, West).  
    This shows how Dimensions are used to filter views.
 
-8. Interpret your chart  
+4. Interpret your chart  
    Ask:
 
 - Which category has the highest sales?
