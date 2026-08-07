@@ -1,0 +1,20 @@
+# TODO — Functions (Python)
+
+- [x] Title + Intro
+- [x] What is a Function?
+- [x] Defining & Calling Functions
+- [x] Arguments vs Parameters
+- [x] Return Values
+- [x] \*args & \*\*kwargs
+- [x] Variable Scope
+- [x] Lambda Functions
+- [x] Higher-Order Functions
+- [x] Closures
+- [x] Decorators
+- [x] Recursion
+- [x] if **name** == "**main**":
+- [x] Built-in Functions overview
+- [x] Real-World Use Cases
+- [x] Common Pitfalls
+- [x] Key Takeaway
+- [x] Review rendered Markdown / verify code snippets
