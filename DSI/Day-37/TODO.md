@@ -15,6 +15,7 @@
 - [x] if **name** == "**main**":
 - [x] Built-in Functions overview
 - [x] Real-World Use Cases
+- [x] Set Methods: difference_update() & In-Place Set Operations
 - [x] Common Pitfalls
 - [x] Key Takeaway
 - [x] Review rendered Markdown / verify code snippets

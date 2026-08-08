@@ -718,7 +718,100 @@ print(unreliable())
 
 ---
 
-## 15. Common Pitfalls
+## 15. Set Methods: `difference_update()` and In-Place Set Operations
+
+Sets come with **in-place** methods that modify the original set directly instead of returning a new one. They are the mutating counterparts of the read-only operations (`difference`, `intersection`, `union`, `symmetric_difference`) and all return `None`.
+
+### `difference_update()` — remove elements found in another set/iterable
+
+Removes from the set **any element that also appears in the passed iterable**, changing the set **in place**. This is the mutating version of `difference()`.
+
+```python
+available = {"python", "java", "c++", "ruby", "go"}
+taken = {"java", "go"}
+
+available.difference_update(taken)
+print(available)   # {'python', 'c++', 'ruby'}
+```
+
+> **Note**: `difference_update()` returns `None` and mutates the original set. If you want a **new** set without touching the original, use `difference()` instead.
+
+```python
+a = {1, 2, 3, 4}
+b = {3, 4, 5, 6}
+
+result = a.difference(b)     # difference() -> NEW set, 'a' unchanged
+print(result)                # {1, 2}
+
+a.difference_update(b)       # difference_update() -> mutates 'a' in place
+print(a)                     # {1, 2}
+```
+
+### `update()` — add all elements from another iterable (in-place union)
+
+The mutating version of `union()` — adds every element from the given iterable(s) to the set.
+
+```python
+team_a = {"alice", "bob"}
+team_b = {"carol", "dave"}
+
+team_a.update(team_b)
+print(team_a)   # {'alice', 'bob', 'carol', 'dave'}
+```
+
+### `intersection_update()` — keep only elements present in both sets
+
+The mutating version of `intersection()` — removes anything **not** shared with the given iterable(s).
+
+```python
+all_users = {"alice", "bob", "carol", "dave"}
+premium = {"bob", "dave", "erin"}
+
+premium.intersection_update(all_users)
+print(premium)   # {'bob', 'dave'}  (only users who are in both)
+```
+
+### `symmetric_difference_update()` — keep elements in exactly one set
+
+The mutating version of `symmetric_difference()` — keeps elements that appear in **only one** of the two sets (removes shared ones).
+
+```python
+likes_football = {"alice", "bob", "carol"}
+likes_tennis = {"bob", "dave"}
+
+likes_football.symmetric_difference_update(likes_tennis)
+print(likes_football)   # {'alice', 'carol', 'dave'}  (shared 'bob' removed)
+```
+
+### Combined example — cleaning up a shopping list
+
+```python
+cart = {"apple", "milk", "bread", "eggs", "butter"}
+out_of_stock = {"milk", "butter"}
+
+# Remove out-of-stock items in place
+cart.difference_update(out_of_stock)
+print(cart)   # {'apple', 'bread', 'eggs'}
+
+# Add freshly restocked items
+cart.update({"juice", "cheese"})
+print(cart)   # {'apple', 'bread', 'eggs', 'juice', 'cheese'}
+```
+
+### Quick reference — read-only vs in-place
+
+| Read-only (returns new set)           | In-place (mutates, returns `None`) | Effect                           |
+| ------------------------------------- | ---------------------------------- | -------------------------------- |
+| `a \| b` / `a.union(b)`               | `a.update(b)`                      | add all elements from `b`        |
+| `a - b` / `a.difference(b)`           | `a.difference_update(b)`           | remove elements found in `b`     |
+| `a & b` / `a.intersection(b)`         | `a.intersection_update(b)`         | keep elements present in both    |
+| `a ^ b` / `a.symmetric_difference(b)` | `a.symmetric_difference_update(b)` | keep elements in exactly one set |
+
+> **Key idea**: The in-place `*_update()` methods modify the set they are called on and return `None`. Use the read-only operators when you need to keep the original set intact, and the `*_update()` methods when mutating the original is fine.
+
+---
+
+## 16. Common Pitfalls
 
 | Pitfall                                                           | Fix                                                                             |
 | ----------------------------------------------------------------- | ------------------------------------------------------------------------------- |
@@ -737,7 +830,7 @@ print(unreliable())
 
 ---
 
-## 16. Function Definitions — Quick Reference
+## 17. Function Definitions — Quick Reference
 
 ```python
 def basic():                      # no parameters, returns None
