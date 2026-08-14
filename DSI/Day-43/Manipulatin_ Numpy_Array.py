@@ -82,3 +82,83 @@ print(b)
 v = np.vstack(((a, b)))
 # Print the combined array so we can see the result
 print(v)
+
+np.vstack((a, b, a, b))
+
+# Horizontal stack
+
+h = np.hstack(((a, b)))
+print(h)
+
+np.hstack((a, b, a, b))
+
+print(my_2d_array)
+my_2d_array.flatten()
+
+
+# ============================================================
+# NUMPY STACKING & FLATTENING — EXPLAINED FOR BEGINNERS
+# ============================================================
+
+# Before we can stack anything, we need arrays to stack.
+# A 1D NumPy array is like a list of numbers.
+
+a = np.array([1, 2, 3])  # first array  -> [1 2 3]
+b = np.array([4, 5, 6])  # second array -> [4 5 6]
+
+# ------------------------------------------------------------
+# VERTICAL STACK (vstack) — stacks arrays ON TOP of each other
+# ------------------------------------------------------------
+# np.vstack((a, b, a, b)) stacks the arrays as ROWS, one below the other.
+# The result is a 2D array with 4 rows and 3 columns:
+#   [1 2 3]   <- a
+#   [4 5 6]   <- b
+#   [1 2 3]   <- a again
+#   [4 5 6]   <- b again
+np.vstack((a, b, a, b))
+# ⚠️ IMPORTANT: this line alone does NOT save the result anywhere!
+# The stacked array is created and then immediately thrown away,
+# because nothing is assigned to a variable. To keep it, you'd write:
+#   result = np.vstack((a, b, a, b))
+# ...and then use `result` later in your code.
+
+# ------------------------------------------------------------
+# HORIZONTAL STACK (hstack) — stacks arrays SIDE BY SIDE
+# ------------------------------------------------------------
+# hstack joins arrays along the columns (left to right),
+# producing ONE single row (1D array).
+h = np.hstack(((a, b)))  # <-- the DOUBLE parentheses are a common beginner trap!
+print(h)  # prints: [1 2 3 4 5 6]
+# Why does it still work? ((a, b)) is just a tuple (a, b) wrapped in
+# one extra pair of parentheses — valid but unnecessary.
+# The cleaner version is:  h = np.hstack((a, b))
+
+# Same operation again, but this time WITHOUT saving to a variable.
+# Just like the vstack line above, the result is computed and discarded,
+# so you won't see any output from this line.
+np.hstack((a, b, a, b))
+# (If saved, the result would be: [1 2 3 4 5 6 1 2 3 4 5 6])
+
+# ------------------------------------------------------------
+# FLATTEN — turns a 2D array into a single 1D row
+# ------------------------------------------------------------
+print(my_2d_array)  # shows the 2D array, for example:
+# [[1 2 3]
+#  [4 5 6]]
+
+my_2d_array.flatten()  # creates a NEW 1D copy: [1 2 3 4 5 6]
+# ⚠️ IMPORTANT: flatten() does NOT modify the original array —
+# it returns a brand-new array. To keep the flattened version,
+# you must assign it:
+#   flat = my_2d_array.flatten()
+# (If you instead want a flattened "view" that shares memory with the
+# original, use my_2d_array.ravel() — but for beginners, flatten() is
+# usually the safer choice.)
+
+"""
+**Key takeaways for a beginner:**
+1. **`vstack` = vertical** (stacks rows on top of each other → more rows)
+2. **`hstack` = horizontal** (stacks columns side by side → wider row)
+3. **`flatten()` doesn't change the original array** — always assign its result to a variable if you want to use it.
+4. **Undefined names** — in your original snippet, `a`, `b`, and `my_2d_array` were never created, so running it would raise a `NameError`. The setup lines I added at the top fix that.
+"""
