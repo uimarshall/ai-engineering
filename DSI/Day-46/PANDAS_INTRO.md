@@ -55,6 +55,10 @@ A typical day for a data analyst at a company: pull raw sales data (CSV/API/SQL)
 
 ### 3.1 The DataFrame — "your spreadsheet in Python"
 
+It contains Horizontal rows and Vertical columns.
+
+When we talk of the shape of the data, we're looking at how many rows & columns it has. Similar to the Cartesian graph, where we have the x and y axis usually written as (x,y) to get the coordinates, we also have (r,c) to visualize the shape of the data, which means the rows measure how long the data is, while the column measures how wide the data is.
+
 Think of a DataFrame exactly like an Excel sheet:
 
 ```
