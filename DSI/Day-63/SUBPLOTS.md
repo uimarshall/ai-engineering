@@ -1,22 +1,14 @@
-I can't save files outside of chart/data outputs, but I can give you the complete, ready-to-copy markdown content below. You can paste it into a file named `matplotlib_subplots_guide.md`.
-
----
-
-````markdown
 # 📊 Matplotlib Subplots: A Beginner-Friendly Comprehensive Guide
 
 ## Table of Contents
 
-1. [What Are Subplots?](#what-are-subplots)
-2. [Why Use Subplots?](#why-use-subplots)
-3. [The Two Main Approaches](#the-two-main-approaches)
-4. [Method 1: `plt.subplot()` — The Simple Way](#method-1-pltsubplot--the-simple-way)
-5. [Method 2: `plt.subplots()` — The Professional Way](#method-2-pltsubplots--the-professional-way)
-6. [Method 3: `fig.add_subplot()` — The Object-Oriented Way](#method-3-figadd_subplot--the-object-oriented-way)
-7. [Advanced Layouts](#advanced-layouts)
-8. [Business Use Cases by Industry](#business-use-cases-by-industry)
-9. [Common Beginner Mistakes](#common-beginner-mistakes)
-10. [Quick Reference Cheat Sheet](#quick-reference-cheat-sheet)
+- [📊 Matplotlib Subplots: A Beginner-Friendly Comprehensive Guide](#-matplotlib-subplots-a-beginner-friendly-comprehensive-guide)
+  - [Table of Contents](#table-of-contents)
+  - [What Are Subplots?](#what-are-subplots)
+  - [Why Use Subplots?](#why-use-subplots)
+  - [The Two Main Approaches](#the-two-main-approaches)
+  - [Method 1: `plt.subplot()` — The Simple Way](#method-1-pltsubplot--the-simple-way)
+    - [Sample Code](#sample-code)
 
 ---
 
@@ -83,6 +75,7 @@ plt.ylabel('Amplitude')       # label the y-axis
 plt.tight_layout()            # auto-adjust spacing so labels don't overlap
 plt.show()                    # display the figure
 ```
+
 ````
 
 ### Line-by-Line Explanation
@@ -456,3 +449,4 @@ _Happy Plotting! 🎨_
 ```
 
 ```
+````
