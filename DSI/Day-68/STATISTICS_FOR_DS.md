@@ -1,9 +1,3 @@
-All four visualization figures have been generated and saved. Now let me provide you with the **complete comprehensive guide**.
-
-> **Note on file saving:** I can only generate downloadable files for charts/data outputs via Python. I cannot save to arbitrary file paths like `DSI\Day-68\STATISTICS_FOR_DS.md`. However, you can **copy the complete markdown content below** and save it to your desired location. All charts are available for download.
-
----
-
 # 📊 Statistics for Data Science — A Beginner's Comprehensive Guide
 
 ---
