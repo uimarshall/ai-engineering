@@ -1,5 +1,27 @@
 # 📊 The Normal Distribution & Z-Scores: A Beginner-Friendly Data Science Guide (with Python)
 
+`Normal Distribution` is distributed symetrically around the mean.
+
+![alt text](image.png)
+
+> The spread of the data in a `NORMAL DISTRIBUTION` is represented by the `Standard Deviation`.
+>
+> ![alt text](image-1.png)
+>
+> ![alt text](image-3.png)
+>
+> ![alt text](image-2.png)
+>
+> ![alt text](image-5.png)
+>
+> ![alt text](image-6.png)
+>
+> ![alt text](image-7.png)
+>
+> ![alt text](image-8.png)
+>
+> ![alt text](image-9.png)
+
 > **Goal:** Understand _what_ the normal distribution is, _why_ it powers half of statistics and data science, _how_ Z-scores turn any normal dataset into a universal ruler, and _how_ companies use these ideas to make money or avoid losing it.
 > Everything is explained step by step, with runnable Python code, and every chart is explained **element by element**.
 
