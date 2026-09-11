@@ -19,6 +19,12 @@ pip install numpy scipy matplotlib pandas
 
 ---
 
+![alt text](image-6.png)
+
+![alt text](image-7.png)
+
+![alt text](image-8.png)
+
 ## Table of Contents
 
 1. [The Big Idea: Testing a Claim](#1-the-big-idea)
