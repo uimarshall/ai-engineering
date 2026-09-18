@@ -10,6 +10,7 @@
 # IMPORT REQUIRED PACKAGES  # Load tools provided by external Python libraries.
 
 from pathlib import Path  # Import Path for building portable file paths.
+from typing import cast  # Import cast to narrow types for the type checker only.
 
 import pandas as pd  # Import pandas for reading and organising table-shaped data.
 from scipy.stats import (  # Import chi-square testing tools from SciPy.
@@ -72,6 +73,12 @@ chi2_statistic, p_value, dof, expected_values = chi2_contingency(
     observed_values,  # Supply the observed count table to the chi-square test.
     correction=False,  # Do not apply Yates' continuity correction to this test.
 )
+chi2_statistic = cast(
+    float, chi2_statistic
+)  # Narrow the type from the generic tuple element to float.
+p_value = cast(
+    float, p_value
+)  # Narrow the type from the generic tuple element to float.
 print(chi2_statistic, p_value)  # Print the statistic and p-value returned by SciPy.
 
 
