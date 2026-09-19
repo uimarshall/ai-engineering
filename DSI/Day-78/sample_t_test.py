@@ -8,6 +8,7 @@
 
 # IMPORT REQUIRED PACKAGES
 
+import os
 from typing import (
     cast,  # Import cast to narrow types for the type checker only (no effect at runtime).
 )
@@ -49,6 +50,26 @@ plt.hist(
     sample, density=True, alpha=0.5
 )  # Overlay a histogram of the sample on the same chart so we can visually compare the two distributions' shapes.
 plt.show()  # Render the chart window so both histograms become visible.
+
+################
+os.makedirs("plots", exist_ok=True)  # make the folder if it isn't there
+
+plt.figure(figsize=(8, 5))
+plt.hist(population, bins=30, density=True, alpha=0.5, label="population (1000)")
+plt.hist(sample, bins=30, density=True, alpha=0.5, label="sample (250)")
+plt.xlabel("value")
+plt.ylabel("density")
+plt.title("Population vs Sample")
+plt.legend()
+
+plt.savefig(
+    "plots/one_sample_t_test.png", dpi=300, bbox_inches="tight"
+)  # ← writes the file
+plt.show()  # ← shows the window
+plt.close()  # ← frees memory
+
+
+#################
 
 population_mean = (
     population.mean()
