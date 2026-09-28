@@ -1,5 +1,6 @@
 ## What is machine learning?
 
+$ENCRYPTION_KEY = node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 Machine learning is the process whereby:
 
 Computers are given the ability to learn to make decisions from data without being explicitly programmed.
