@@ -59,6 +59,14 @@ These new cols would now go into our ML model as input variables and hence the i
 
 ![alt text](image-5.png)
 
-But we need to be wary of one thing and that is known as the `Dummy variable trap` which is where our newly created dummy variables perfectly predict one another, which brings the assumption of there being no multicollinearity within the model.
+But we need to be wary of one thing and that is known as the `Dummy variable trap` which is where our newly created dummy variables perfectly predict one another, which breaks the assumption of there being no multi-collinearity within the model, a requirement for some models such as linear regression. To give a little bit more context, multi-collinearity occurs when two or more input variables are highly or completely correlated with each other. It's a scenario that generally speaking, we attempt to avoid, as in short, while it won't necessarily affect the overall predictive accuracy of our model, it can make it difficult to trust this statistics around how well the model is performing and how much impact each input variable is truly having.
+
+Thankfully, the solution to the dummy variable trap is actually a very easy one. All we need to do is to drop one of our new dummy variable, ensuring that we don't have perfect information between them.
 
 ![alt text](image-6.png)
+
+Something worth noting quickly is that here we had three classes, and thus we created 3 new dummy variables. And we needed to drop one if we only had 2 classes in our original categorical variable, and thus 2 new dummy variables were created. Again, we would have to drop 1 and so on. So if we had another categorical column that needed the 1 hot encoding treatment, then we need to drop 1 column from that set as well.
+
+Other encoding techniques includes label encoding, binary encoding, target encoding, ordinal encoding and feature hashing. When you are looking to train your next machine learning model and you want to deal with categorical variables, make sure you think hard about which is the most appropriate.
+
+![alt text](image-7.png)
