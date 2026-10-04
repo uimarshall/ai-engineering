@@ -54,7 +54,7 @@ And any value outside of 5 or 45 would be deemed `outliers`. We could then remov
 
 ![alt text](image-5.png)
 
-1. `Standard deviations`
+2. `Standard deviations`
 
 Instead of using quartiles as the basis, we rely on understanding the `mean` and `standard deviation` of our data to infer which data points are higher or lower than what we might consider to be normal values. The chart below represents a normal distribution curve with a line down the middle representing the mean of our data and several other vertical lines representing a number of standard deviations away from the mean.
 Standard deviation is a measure of the spread of our data and what's most important to understand is that in `normal distribution`, most of the data is centered around the `mean`.
