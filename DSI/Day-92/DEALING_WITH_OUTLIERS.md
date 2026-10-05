@@ -1,3 +1,5 @@
+## DEALING WITH OUTLIERS (THEORY)
+
 An `outlier` can be any value that `differs significantly` from other values.
 
 The perception of what an `outlier` is depends on the scenario you're dealing with. Given a particular scenario, you could just say that an `outlier` is any value that seems out of place in our data. But just because a number is very large or very small, it doesn't instantly mean it shouldn't be there. You could argue that every value, no matter how high or low, is genuinely part of the data, and therefore we shouldn't consider removing them at all.
@@ -38,6 +40,8 @@ Well, a linear regression model might be quite badly affected by outliers. Model
 
 1. Box Plot
 
+![alt text](image-10.png)
+
 It's a very useful way to visualise a set of data as it gives us a lot of information about the spread of the values in our `box plot`. The `median` is shown by the white line in the centre, and the `median` is the middle value of our data. The `median` is often far more useful than the `mean` as it's not in any ways skewed by very large or small values in our data. It is literally just the middle value if we sorted out data from smallest to largest.
 
 Our boxplot also shows us the `upper` and `lower` `quartiles`.
@@ -54,7 +58,7 @@ And any value outside of 5 or 45 would be deemed `outliers`. We could then remov
 
 ![alt text](image-5.png)
 
-2. `Standard deviations`
+1. `Standard deviations`
 
 Instead of using quartiles as the basis, we rely on understanding the `mean` and `standard deviation` of our data to infer which data points are higher or lower than what we might consider to be normal values. The chart below represents a normal distribution curve with a line down the middle representing the mean of our data and several other vertical lines representing a number of standard deviations away from the mean.
 Standard deviation is a measure of the spread of our data and what's most important to understand is that in `normal distribution`, most of the data is centered around the `mean`.
