@@ -45,6 +45,7 @@ from sklearn.model_selection import (
 from sklearn.model_selection import train_test_split  # hold-out split
 from sklearn.pipeline import Pipeline  # chain steps correctly
 from sklearn.preprocessing import StandardScaler  # z-score scaling
+from sklearn.utils import Bunch
 
 RANDOM_STATE = 42  # fixed seed => reproducible results
 PLOTS_DIR = "plots"  # every figure goes into ./plots/
@@ -75,6 +76,8 @@ def load_scaled_breast_cancer():
     Returns (X_train, X_test, y_train, y_test) where X_* are DataFrames.
     """
     data = load_breast_cancer(as_frame=True)  # as_frame=True -> pandas objects
+    if not isinstance(data, Bunch):
+        raise TypeError("Expected load_breast_cancer to return a dataset Bunch")
     X = data.data  # 569 rows x 30 columns
     y = data.target  # 0 = malignant, 1 = benign
 
@@ -136,7 +139,7 @@ def demo_1_breast_cancer():
     # 04 - Run RFECV
     # =======================================================================
     # --- RFECV: find the best number of features automatically ------------
-    rfecv = RFECV(
+    feature_selector = RFECV(
         estimator=LogisticRegression(max_iter=5000, random_state=RANDOM_STATE),
         step=1,  # drop the single worst feature each round
         min_features_to_select=1,  # scan all the way down to 1 feature
@@ -147,10 +150,12 @@ def demo_1_breast_cancer():
 
     # fit() runs the whole elimination path and scores every prefix.
     # Cost = n_features * cv model fits (here 30 * 5 = 150 fits).
-    rfecv.fit(X_train, y_train)
+    feature_selector.fit(X_train, y_train)
 
-    selected_features = X_train.columns[rfecv.support_].tolist()  # kept names
-    n_selected = int(rfecv.support_.sum())  # how many kept
+    selected_features = X_train.columns[
+        feature_selector.support_
+    ].tolist()  # kept names
+    n_selected = int(feature_selector.support_.sum())  # how many kept
     print(f"\nRFECV kept {n_selected} of {X_train.shape[1]} features:")
     print(selected_features)
 
@@ -158,18 +163,23 @@ def demo_1_breast_cancer():
     # 05 - Plot: CV score versus number of features
     # =======================================================================
     # --- Plot the CV score versus the number of features -------------------
-    mean_scores = rfecv.cv_results_["mean_test_score"]  # mean AUC per subset size
-    std_scores = rfecv.cv_results_["std_test_score"]  # spread across the 5 folds
+    mean_scores = feature_selector.cv_results_[
+        "mean_test_score"
+    ]  # mean AUC per subset size
+    std_scores = feature_selector.cv_results_[
+        "std_test_score"
+    ]  # spread across the 5 folds
 
     # x-axis values: number of features used at each step.
     # Recent scikit-learn stores them directly in cv_results_["n_features"].
-    if "n_features" in rfecv.cv_results_:
-        k_values = list(rfecv.cv_results_["n_features"])
+    if "n_features" in feature_selector.cv_results_:
+        k_values = list(feature_selector.cv_results_["n_features"])
     else:  # fallback for very old versions
         k_values = list(
             range(
-                rfecv.min_features_to_select,
-                rfecv.min_features_to_select + len(mean_scores),
+                getattr(feature_selector, "min_features_to_select", 1),
+                getattr(feature_selector, "min_features_to_select", 1)
+                + len(mean_scores),
             )
         )
 
@@ -202,7 +212,7 @@ def demo_1_breast_cancer():
     # =======================================================================
     # --- Feature ranking ---------------------------------------------------
     ranking_df = (
-        pd.DataFrame({"feature": X_train.columns, "ranking": rfecv.ranking_})
+        pd.DataFrame({"feature": X_train.columns, "ranking": feature_selector.ranking_})
         .sort_values(["ranking", "feature"])  # best features first
         .reset_index(drop=True)
     )
@@ -390,8 +400,10 @@ def demo_2_synthetic():
 def demo_3_nested_cv():
     """Compare 'all features' vs 'RFECV' inside a fully leak-proof pipeline."""
     banner("DEMO 3 - Leakage-free (nested) comparison of the two strategies")
-    data = load_breast_cancer(as_frame=True)
-    X, y = data.data, data.target  # raw data, no manual scaling
+    data = load_breast_cancer(as_frame=True)  # raw data, no manual scaling
+    if not isinstance(data, Bunch):
+        raise TypeError("Expected load_breast_cancer to return a dataset Bunch")
+    X, y = data.data, data.target
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
 
     # Strategy A: scale + model (all features)
