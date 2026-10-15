@@ -1,4 +1,4 @@
-## What is machine learning?
+# What is machine learning?
 
 $ENCRYPTION_KEY = node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 Machine learning is the process whereby:
@@ -25,11 +25,11 @@ This lesson introduces the fundamentals of supervised learning, a key skill for 
 
 Sure! A real-life example is predicting whether a bank transaction is fraudulent. The model uses features like transaction amount, location, and time to classify each transaction as either fraudulent or not. This helps banks detect suspicious activity automatically.
 
-### What is machine learning?
+## What is machine learning?
 
 Machine learning is the process whereby computers learn to make decisions from data without being explicitly programmed.
 
-### Examples of machine learning
+## Examples of machine learning
 
 For example, learning to predict whether an email is spam or not spam given its content and sender. Or learning to cluster books into different categories based on the words they contain, then assigning any new book to one of the existing clusters.
 
