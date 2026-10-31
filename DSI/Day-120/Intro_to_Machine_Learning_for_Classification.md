@@ -1,7 +1,13 @@
 # Introduction to Machine Learning for Classification (Practical)
 
+By `Machine Learning for Classification`, we mean the Machine learns to `Classify` stuffs.
+
 Classification is a `supervised machine-learning` task in which a `model learns`
-to `assign` an `observation` to a `category`. Examples include:
+to `assign` an `observation` to a `category`. In other words, it `classifies` an observation.
+
+> `Classification` is based on `Probability`.
+
+Examples include:
 
 - deciding whether an email is spam or not spam;
 - predicting whether a customer will churn;
@@ -9,7 +15,7 @@ to `assign` an `observation` to a `category`. Examples include:
 - identifying whether a tumour is benign or malignant.
 
 The categories are called **classes**, hence the name `Classification`. In a `binary classification` problem there
-are two classes, while a multiclass problem has three or more classes.
+are two classes, while a multiclass problem has three or more classes or classification.
 
 This note uses the same practical workflow that we would use on a business
 dataset:
@@ -71,12 +77,18 @@ credentials are needed. In a real project, replace the dataset-loading section
 with a `pandas.read_csv(...)` call and inspect the schema first.
 
 ```python
+# Import the function that loads scikit-learn's built-in breast-cancer data.
 from sklearn.datasets import load_breast_cancer
 
+# Load the data; as_frame=True returns pandas tables with named columns.
 dataset = load_breast_cancer(as_frame=True)
+# Combine feature columns and the target column into one DataFrame.
 data = dataset.frame
+# Display the first five rows so we can inspect example observations.
 print(data.head())
+# Display the dimensions as (number of rows, number of columns).
 print(data.shape)
+# Count all missing cells: isna marks them, and sum counts the True values.
 print(data.isna().sum().sum())
 ```
 
@@ -96,25 +108,29 @@ Never include the target column in `X`. If the target accidentally becomes a
 feature, the model can appear excellent while simply reading the answer.
 
 ```python
+# Keep all columns other than the answer column as the model's input features.
 X = data.drop(columns="target")
+# Select the answer column that the model will learn to predict.
 y = data["target"]
 ```
 
 ## 4. Split before preprocessing
 
-The test set represents future, unseen data. We must not allow information from
+The `test set` represents future, unseen data. We must not allow information from
 it to influence preprocessing decisions. Therefore, split first and fit the
-imputer and scaler only on the training data.
+imputer and scaler `only` on the `training data`.
 
 ```python
+# Import the helper that divides data into training and test subsets.
 from sklearn.model_selection import train_test_split
 
+# Make four matching subsets: training features/labels and test features/labels.
 X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    random_state=42,
-    stratify=y,
+    X,  # Split the input feature rows.
+    y,  # Split the matching labels in the same way.
+    test_size=0.2,  # Reserve 20% of observations for testing.
+    random_state=42,  # Make the random split repeatable.
+    stratify=y,  # Keep similar class proportions in both subsets.
 )
 ```
 
@@ -139,13 +155,19 @@ mistake: fitting an imputer or scaler on all data before the split, which is a
 form of data leakage.
 
 ```python
+# Import a tool that fills missing values using a learned statistic.
 from sklearn.impute import SimpleImputer
+# Import Pipeline to run multiple preparation steps in order.
 from sklearn.pipeline import Pipeline
+# Import a tool that centers and scales numeric feature columns.
 from sklearn.preprocessing import StandardScaler
 
+# Create a reusable sequence of preparation steps.
 scaled_preprocessing = Pipeline(
     steps=[
+        # Name the step "imputer" and fill missing values with the median.
         ("imputer", SimpleImputer(strategy="median")),
+        # Name the step "scaler" and put features on comparable scales.
         ("scaler", StandardScaler()),
     ]
 )
@@ -183,43 +205,60 @@ The example compares all four models using the same fixed train/test split.
 That makes the comparison fair.
 
 ```python
+# Import a probability-based linear classifier.
 from sklearn.linear_model import LogisticRegression
+# Import a classifier that predicts from nearby training observations.
 from sklearn.neighbors import KNeighborsClassifier
+# Import a classifier that learns feature-based decision rules.
 from sklearn.tree import DecisionTreeClassifier
+# Import a classifier that combines many decision trees.
 from sklearn.ensemble import RandomForestClassifier
 
+# Store each model pipeline under a readable name.
 models = {
+    # Preprocess features, then train logistic regression.
     "Logistic regression": Pipeline(
         steps=[
             ("preprocessing", scaled_preprocessing),
+            # Allow more training iterations and make results repeatable.
             ("model", LogisticRegression(max_iter=2_000, random_state=42)),
         ]
     ),
+    # Preprocess features, then train a deliberately shallow tree.
     "Decision tree": Pipeline(
         steps=[
             ("preprocessing", scaled_preprocessing),
+            # Limit the tree to four levels and set its random seed.
             ("model", DecisionTreeClassifier(max_depth=4, random_state=42)),
         ]
     ),
+    # Preprocess features, then average the decisions of many trees.
     "Random forest": Pipeline(
         steps=[
             ("preprocessing", scaled_preprocessing),
+            # Build 200 trees; n_jobs=-1 uses available CPU cores.
             ("model", RandomForestClassifier(
                 n_estimators=200, random_state=42, n_jobs=-1
             )),
         ]
     ),
+    # Preprocess features, then let the seven nearest rows vote.
     "K-nearest neighbours": Pipeline(
         steps=[
             ("preprocessing", scaled_preprocessing),
+            # n_neighbors sets how many nearby rows vote on a prediction.
             ("model", KNeighborsClassifier(n_neighbors=7)),
         ]
     ),
 }
 
+# Loop through the dictionary; name is a label and model is a pipeline.
 for name, model in models.items():
+    # Learn preprocessing values and model patterns from training data.
     model.fit(X_train, y_train)
+    # Predict class labels for the held-out test feature rows.
     predictions = model.predict(X_test)
+    # Display the model name and its first five predicted labels.
     print(name, predictions[:5])
 ```
 
@@ -257,19 +296,30 @@ The script prints accuracy, precision, recall, F1, ROC-AUC, and a confusion
 matrix for every model:
 
 ```python
+# Import functions that calculate different classification metrics.
 from sklearn.metrics import (
+    # Proportion of all predictions that are correct.
     accuracy_score,
+    # Text summary of precision, recall, and F1 for each class.
     classification_report,
+    # Counts actual versus predicted classes.
     confusion_matrix,
+    # Measures how well probability scores rank the positive class.
     roc_auc_score,
 )
 
+# Predict class labels for comparison with the known test labels.
 predictions = model.predict(X_test)
+# Get probabilities; [:, 1] selects the probability for class label 1.
 probabilities = model.predict_proba(X_test)[:, 1]
 
+# Print the share of test predictions that were correct.
 print(accuracy_score(y_test, predictions))
+# Print precision, recall, and F1 for each class.
 print(classification_report(y_test, predictions))
+# Print counts of correct and incorrect predictions for each class.
 print(confusion_matrix(y_test, predictions))
+# Print the ROC-AUC score from the predicted probabilities.
 print(roc_auc_score(y_test, probabilities))
 ```
 
@@ -284,12 +334,18 @@ columns used during training. The pipeline automatically applies the fitted
 imputer and scaler before making the prediction.
 
 ```python
+# Choose the trained logistic-regression pipeline from the dictionary.
 best_model = models["Logistic regression"]
+# Select test row zero; double brackets keep it as a one-row DataFrame.
 new_observation = X_test.iloc[[0]]
+# Predict its class; [0] takes the first result from the returned array.
 predicted_class = best_model.predict(new_observation)[0]
+# Select row zero's probability for class 1 from the probability table.
 predicted_probability = best_model.predict_proba(new_observation)[0, 1]
 
+# Display the predicted class label.
 print(predicted_class)
+# Display the estimated probability of class 1.
 print(predicted_probability)
 ```
 
@@ -333,3 +389,18 @@ the real cost of false positives and false negatives. The most useful first
 model is not always the most complicated one: a well-evaluated logistic
 regression baseline can be easier to explain and operate than a more complex
 alternative.
+
+## Why DataFrames Are Mostly Used:
+
+Data isn’t always stored in a DataFrame. In this example, `as_frame=True` asks scikit-learn to return **pandas** objects:
+
+```python
+dataset = load_breast_cancer(as_frame=True)
+data = dataset.frame
+```
+
+A pandas **DataFrame** is a table with rows and named columns, similar to a spreadsheet. “Frame” here means a structured table of data; it doesn’t mean a video frame. The name comes from the `data.frame` terminology used by R, another language for data analysis.
+
+A DataFrame is convenient for this tutorial because you can refer to columns by name, for example `data["target"]`, and use methods such as `.drop()`, `.isna()`, and `.iloc`. With `as_frame=False`, scikit-learn returns NumPy arrays instead, which are also common for machine learning but don’t carry the same column labels.
+
+In this example, `dataset.frame` combines the measurements and target into one table. `dataset.data` contains just the measurements, and `dataset.target` contains the labels.
