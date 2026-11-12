@@ -2,7 +2,7 @@
 
 ## The Question
 
-In K-means, **K** is the number of clusters the algorithm attempts to create. A cluster is a group of similar data points, and each cluster has a **centroid**, or center.
+In K-means, **K** is the number of clusters the algorithm attempts to create. A cluster is a group of similar data points, and each cluster has a **centroid**, or center
 
 There is no single best value of K for every dataset. The choice depends on both the data and the purpose of the analysis. For example, a business may prefer a few understandable customer segments over many small groups that are difficult to act on.
 
