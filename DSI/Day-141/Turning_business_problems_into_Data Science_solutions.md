@@ -5,6 +5,10 @@
 
 ---
 
+![alt text](image-1.png)
+
+![alt text](image.png)
+
 ## 1. The Core Problem
 
 Stakeholders rarely arrive saying _"I need a gradient-boosted classifier with a
